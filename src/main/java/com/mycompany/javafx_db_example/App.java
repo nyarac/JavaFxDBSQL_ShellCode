@@ -1,6 +1,7 @@
 package com.mycompany.javafx_db_example;
 
 import com.mycompany.javafx_db_example.db.ConnDbOps;
+import com.mycompany.javafx_db_example.db.Person;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Scanner;
-import javafx.scene.paint.Color;
 
 /**
  * JavaFX App
@@ -53,6 +53,7 @@ public class App extends Application {
             System.out.print("Enter your choice: ");
             input = scan.next().charAt(0);
 
+
             switch (input) {
                 case 'g':
                      launch(args); //GUI
@@ -66,21 +67,26 @@ public class App extends Application {
                     break;
 
                 case 'i':
+                    Person p;
                     System.out.print("Enter Name: ");
-                    String name = scan.next();
-                    System.out.print("Enter Email: ");
-                    String email = scan.next();
+                    String name = scan.nextLine();
+                    System.out.println("Enter Email: ");
+                    String email = scan.nextLine();
                     System.out.print("Enter Phone: ");
-                    String phone = scan.next();
+                    String phone = scan.nextLine();
                     System.out.print("Enter Address: ");
-                    String address = scan.next();
+                    String address = scan.nextLine();
                     System.out.print("Enter Password: ");
-                    String password = scan.next();
-                    cdbop.insertUser(name, email, phone, address, password); //Your insertUser method
+                    String password = scan.nextLine();
+                    System.out.print("Enter Salary: ");
+                    int Salary = scan.nextInt();
+                    p = new Person(name, email, phone, address, password, Salary);
+                    //Your insertUser method
+                    cdbop.insertUser(p);
                     break;
                 case 'q':
                     System.out.print("Enter the name to query: ");
-                    String queryName = scan.next();
+                    String queryName = scan.nextLine();
                     cdbop.queryUserByName(queryName); //Your queryUserByName method
                     break;
                 case 'e':

@@ -16,21 +16,27 @@ import java.sql.Statement;
  * @author MoaathAlrajab
  */
 public class ConnDbOps {
-    
+    final String MYSQL_SERVER_URL = "jdbc:mysql://csc311coursenc.mariadb.database.azure.com/";
+    final String DB_URL = "jdbc:mysql://csc311coursenc.mariadb.database.azure.com/dsfsdf232";
+    final String USERNAME = "csc311admin@csc311coursenc";
+    final String PASSWORD = "Prplpan1!";
     
     public  boolean connectToDatabase() {
         boolean hasRegistredUsers = false;
 
-        final String MYSQL_SERVER_URL = "jdbc:mysql://localhost/";
-        final String DB_URL = "jdbc:mysql://localhost:3306/DBname";
-        final String USERNAME = "username";
-        final String PASSWORD = "password";
-        //Class.forName("com.mysql.jdbc.Driver");
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+
+
         try {
             //First, connect to MYSQL server and create the database if not created
             Connection conn = DriverManager.getConnection(MYSQL_SERVER_URL, USERNAME, PASSWORD);
             Statement statement = conn.createStatement();
-            statement.executeUpdate("CREATE DATABASE IF NOT EXISTS DBname");
+            statement.executeUpdate("CREATE DATABASE IF NOT EXISTS dsfsdf232");
             statement.close();
             conn.close();
 
@@ -69,9 +75,7 @@ public class ConnDbOps {
     }
 
     public  void queryUserByName(String name) {
-        final String DB_URL = "jdbc:mysql://localhost:3306/DBname";
-        final String USERNAME = "username";
-        final String PASSWORD = "password";
+
 
         try {
             Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
@@ -97,9 +101,7 @@ public class ConnDbOps {
     }
 
     public  void listAllUsers() {
-        final String DB_URL = "jdbc:mysql://localhost:3306/DBname";
-        final String USERNAME = "username";
-        final String PASSWORD = "password";
+
 
         try {
             Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
@@ -124,20 +126,65 @@ public class ConnDbOps {
         }
     }
 
-    public  void insertUser(String name, String email, String phone, String address, String password) {
-        final String DB_URL = "jdbc:mysql://localhost:3306/DBname";
-        final String USERNAME = "username";
-        final String PASSWORD = "password";
+    public void updateUser (String name, String email, String phone, String address, String password) {
+        try {
+            Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+            String sql = "UPDATE users SET name=? WHERE email = ? " ;
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, email);
+
+            int row = preparedStatement.executeUpdate();
+
+            if (row > 0) {
+                System.out.println("a new user was updated successfully");
+            }
+
+            preparedStatement.close();
+            conn.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+    public void deleteUser (String email) {
+        try {
+            Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+            String sql = "DELETE FROM users WHERE email = ? ";
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, email);
+
+            int row = preparedStatement.executeUpdate();
+
+            if (row > 0) {
+                System.out.println(" user was deleted successfully");
+            }
+
+            preparedStatement.close();
+            conn.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public  void insertUser(Person p) {
+
 
         try {
             Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
-            String sql = "INSERT INTO users (name, email, phone, address, password) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO users (name, email, phone, address, password, Salary) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, email);
             preparedStatement.setString(3, phone);
             preparedStatement.setString(4, address);
             preparedStatement.setString(5, password);
+            preparedStatement.setInt(6, Salary);
 
             int row = preparedStatement.executeUpdate();
 
